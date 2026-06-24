@@ -1,0 +1,28 @@
+#include <stdio.h>
+#include <unistd.h>
+#include <string.h>
+
+int main()
+{
+    int fd[2];
+    pipe(fd);
+
+    pid_t pid = fork();
+
+    if(pid > 0)
+    {
+        char msg[] = "Hello Child";
+
+        write(fd[1], msg, strlen(msg)+1);
+    }
+    else
+    {
+        char buf[100];
+
+        read(fd[0], buf, sizeof(buf));
+
+        printf("Child received: %s\n", buf);
+    }
+
+    return 0;
+}
